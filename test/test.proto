@@ -8,9 +8,30 @@ message LoginRequest{
     string pwd = 2;
 }
 
+
+message ResultCode{
+    int32 errcode = 1;
+    bytes errmsg = 2;
+}
+
 //定义登陆响应消息类型
 message LoginResponse{
-    int32 errcode = 1;
-    string errmsg = 2;
-    bool success = 3;
+    ResultCode result = 1;
+    bool success = 2;
+}
+
+
+message User{
+    bytes name = 1;
+    uint32 age = 2;
+    enum Sex{
+        MAN = 0;
+        WOMAN = 1;
+    }
+    Sex sex = 3;
+}
+
+message GetFriendListsResponse{
+    ResultCode result = 1;
+    repeated User friend_list = 2;//因为不是只有一个用户,所以得用列表repeated
 }
