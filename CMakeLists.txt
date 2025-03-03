@@ -11,9 +11,10 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/thridparty)
 include_directories(${PROJECT_SOURCE_DIR}/src/include)
+include_directories(${PROJECT_SOURCE_DIR}/example)
 #库文件搜索路径
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 #添加子文件
 add_subdirectory(example)
-#add_subdirectory(src)
+add_subdirectory(src)
