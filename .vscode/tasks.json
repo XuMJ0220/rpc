@@ -8,16 +8,22 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "-I/${workspaceFolder}/include",
+                "-I/${workspaceFolder}/example",
+                "-I/${workspaceFolder}/src/include",
                 //"${workspaceFolder}/src/threadpool.cpp",  // 添加 ThreadPool.cpp
-                "${workspaceFolder}/test/test.pb.cc",
-                "main.cpp",
+                "${workspaceFolder}/example/user.pb.cc",
+                "${workspaceFolder}/src/myrpcapplication.cpp",
+                "${workspaceFolder}/src/myrpcconfig.cpp",
+                "${workspaceFolder}/src/myrpcprovider.cpp",
+                "userservice.cpp",
 				"-lprotobuf",
+                "-L/${workspaceFolder}/lib",
+                "-lmyrpc",
                 "-o",
                 "${workspaceFolder}/middle_out/a.out"
             ],
             "options": {
-                "cwd": "${workspaceFolder}/test"
+                "cwd": "${workspaceFolder}/example/callee"
             },
             "problemMatcher": [
                 "$gcc"

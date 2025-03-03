@@ -7,6 +7,7 @@ void ShowArgsHelp(){
 }
 
 MyRPCApplication MyRPCApplication::instance;
+MyRPCConfig MyRPCApplication::myRPCConfig_;
 
 void MyRPCApplication::Init(int argc,char** argv){
     //command -i <config_file>
@@ -22,21 +23,28 @@ void MyRPCApplication::Init(int argc,char** argv){
         switch (c)
         {
         case 'i':
-            std::cout<<argv[0]<<" "<<"-i "<<getopt<<std::endl;
+            //std::cout<<argv[0]<<" "<<"-i "<<getopt<<std::endl;
             config_file = optarg;
             break;
         case '?':
-            std::cout<<"Invalid args!"<<std::endl;
+            //std::cout<<"Invalid args!"<<std::endl;
             ShowArgsHelp();
             exit(EXIT_FAILURE);
         case ':':
-            std::cout<<"Need <configfile>"<<std::endl;
+            //std::cout<<"Need <configfile>"<<std::endl;
             ShowArgsHelp();
             exit(EXIT_FAILURE);
         default:
             break;
         }
     }
+
+    myRPCConfig_.LoadConfigFile(config_file.c_str());
+
+    std::cout<<"rpcserverip:"<<myRPCConfig_.Load("rpcserverip");
+    std::cout<<"rpcserverport:"<<myRPCConfig_.Load("rpcserverport");
+    std::cout<<"zookeeperip:"<<myRPCConfig_.Load("zookeeperip");
+    std::cout<<"zookeeperport:"<<myRPCConfig_.Load("zookeeperport");
 }
 
 MyRPCApplication& MyRPCApplication::getInstance(){
