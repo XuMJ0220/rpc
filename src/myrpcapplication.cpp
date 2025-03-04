@@ -50,3 +50,7 @@ void MyRPCApplication::Init(int argc,char** argv){
 MyRPCApplication& MyRPCApplication::getInstance(){
     return instance;
 }
+
+MyRPCConfig& MyRPCApplication::GetConfig(){
+    return myRPCConfig_;
+}

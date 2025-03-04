@@ -17,6 +17,7 @@ class MyRPCApplication{
     public:
         static void Init(int argc,char** argv);
         static MyRPCApplication& getInstance();
+        static MyRPCConfig& GetConfig();
 };
 
 #endif
