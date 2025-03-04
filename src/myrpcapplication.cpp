@@ -41,10 +41,10 @@ void MyRPCApplication::Init(int argc,char** argv){
 
     myRPCConfig_.LoadConfigFile(config_file.c_str());
 
-    std::cout<<"rpcserverip:"<<myRPCConfig_.Load("rpcserverip");
-    std::cout<<"rpcserverport:"<<myRPCConfig_.Load("rpcserverport");
-    std::cout<<"zookeeperip:"<<myRPCConfig_.Load("zookeeperip");
-    std::cout<<"zookeeperport:"<<myRPCConfig_.Load("zookeeperport");
+    std::cout<<"rpcserverip:"<<myRPCConfig_.Load("rpcserverip")<<std::endl;
+    std::cout<<"rpcserverport:"<<myRPCConfig_.Load("rpcserverport")<<std::endl;
+    std::cout<<"zookeeperip:"<<myRPCConfig_.Load("zookeeperip")<<std::endl;
+    std::cout<<"zookeeperport:"<<myRPCConfig_.Load("zookeeperport")<<std::endl;
 }
 
 MyRPCApplication& MyRPCApplication::getInstance(){

@@ -23,8 +23,9 @@ void MyRPCConfig::LoadConfigFile(const char* config_file){
         //找到第一个不是空格的索引
         idx = buf_str.find_first_not_of(' ');
         if(idx!=-1){
-            buf_str = buf_str.substr(idx,buf_str.size()-idx);
+            buf_str = buf_str.substr(idx,buf_str.size()-idx-1);//最后的-1是去掉了最后的\n还行
         }
+
         //找到倒数第一个不是空格的索引
         idx = buf_str.find_last_not_of(' ');
         if(idx!=-1){
