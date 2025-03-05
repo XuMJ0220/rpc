@@ -5,7 +5,7 @@
 #include <muduo/net/TcpServer.h>
 #include <muduo/net/EventLoop.h>
 #include <muduo/net/InetAddress.h>
-
+#include <unordered_map>
 class MyRPCProvider{
     private:
         muduo::net::EventLoop m_eventLoop_;
@@ -16,6 +16,15 @@ class MyRPCProvider{
         void onMessage(const muduo::net::TcpConnectionPtr&,
                             muduo::net::Buffer*,
                             muduo::Timestamp);
+        //记录服务的信息结构体
+        struct ServiceInfo{
+            //记录服务
+            google::protobuf::Service* service_;
+            //记录服务中每个方法的名字和对应方法的指针
+            std::unordered_map<std::string,const google::protobuf::MethodDescriptor*> methodMap_;
+        };
+        //存储注册成功的服务对象和其服务方法的所有信息
+        std::unordered_map<std::string,ServiceInfo> serviceMap_;
     public:
         MyRPCProvider() = default;
         ~MyRPCProvider() = default;
