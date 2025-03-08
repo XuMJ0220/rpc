@@ -32,6 +32,8 @@ class MyRPCProvider{
         void NotifyService(google::protobuf::Service* service);
         //启动rpc服务节点,开始提供rpc远程网络调用服务
         void Run();
+        //Closure的回调操作，用于序列化rpc的响应和网络发送
+        void SendRPCResponse(const muduo::net::TcpConnectionPtr&,google::protobuf::Message*);
 };
 
 #endif
