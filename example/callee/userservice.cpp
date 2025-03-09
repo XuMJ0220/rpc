@@ -29,11 +29,12 @@ class UserService:public fixbug::UserServiceRpc{//使用在rpc服务发布端口
             bool login_result = Login(name,pwd);
 
             //把响应写入 包括错误码,错误消息,返回值
-            fixbug::LoginResponse rsp;
-            fixbug::ResultCode* rc = rsp.mutable_result();
+            //fixbug::LoginResponse rsp;
+
+            fixbug::ResultCode* rc = loginresponse->mutable_result();
             rc->set_errcode(0);
-            rc->set_errmsg("");
-            rsp.set_success(login_result);
+            rc->set_errmsg("succeed");
+            loginresponse->set_success(login_result);
             
             //执行回调操作 执行响应对象数据的序列化和网络发送(都是由框架完成)
             done->Run();

@@ -31,6 +31,10 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     }else{
         std::cerr<<"serialize request error"<<std::endl;
     }
+    // for(int i =0;i<args_size;i++){
+    //     std::cout<<args_str[i]<<"-";
+    // }
+    // std::cout<<std::endl;
     //header_size
     uint32_t header_size = 0;
     myrpc::RpcHeader rpcHeader;
@@ -50,7 +54,7 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     send_rpc_str.insert(0,std::string((char*)&header_size,4));//header_size
     send_rpc_str+=rpc_header_str;//rpcheader
     send_rpc_str+=args_str;//args
-
+    
     //打印调试信息
     std::cout<<"==========================================================="<<std::endl;
     std::cout<<"header_size: "<<header_size<<std::endl;
@@ -58,6 +62,7 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     std::cout<<"service_name: "<<service_name<<std::endl;
     std::cout<<"method_name: "<<method_name<<std::endl;
     std::cout<<"args_str: "<<args_str<<std::endl;
+    std::cout<<"send_rpc_str: "<<send_rpc_str<<std::endl;
     std::cout<<"==========================================================="<<std::endl;
 
     //使用tcp编成，完成rpc方法的远程调用
@@ -84,7 +89,7 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     }
 
     //发送rpc请求
-    if(-1==send(clientfd,send_rpc_str.c_str(),sizeof(send_rpc_str),0)){
+    if(-1==send(clientfd,(void *)send_rpc_str.c_str(),(size_t)send_rpc_str.length(),0)){
         std::cout<<"send error,errno: "<<errno<<std::endl;
         close(clientfd);
         return;
@@ -100,11 +105,12 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     }
 
     //将得到的结果进行反序列化
-    std::string response_str(recv_buf,0,recv_size);
+    std::string response_str(recv_buf,recv_size);
     if(!response->ParseFromString(response_str)){
         std::cout<<"parse error! response_str:"<<response_str<<std::endl;
         close(clientfd);
         return;
     }
+
     close(clientfd);
 }

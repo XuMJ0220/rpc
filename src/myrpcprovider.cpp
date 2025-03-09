@@ -72,7 +72,7 @@ void MyRPCProvider::onMessage(const muduo::net::TcpConnectionPtr& conn,
 {
     //网络上接受的远程rpc调用请求的字符流
     std::string recv_buf = buf->retrieveAllAsString();
-
+    std::cout<<"recv_buf: "<<recv_buf<<"-"<<std::endl;
     //recv_buf例子：16UserServiceLoginzhang san123456
 
     //这里的recv_buf的前四个字节会是headr的大小
@@ -101,6 +101,7 @@ void MyRPCProvider::onMessage(const muduo::net::TcpConnectionPtr& conn,
 
     //打印调试信息
     std::cout<<"==================================================="<<std::endl;
+    std::cout<<"recv_buf: "<<recv_buf<<std::endl;
     std::cout<<"header_size: "<<header_size<<std::endl;
     std::cout<<"service_name: "<<service_name<<std::endl;
     std::cout<<"method_name: "<<method_name<<std::endl;
@@ -127,7 +128,7 @@ void MyRPCProvider::onMessage(const muduo::net::TcpConnectionPtr& conn,
     //生成rpc方法调用的请求request和响应response参数
     google::protobuf::Message* request = service->GetRequestPrototype(method).New();
     google::protobuf::Message* response = service->GetResponsePrototype(method).New();
-
+    
     if(!request->ParseFromString(args_str)){
         std::cerr<<"request parse error: "<<args_str<<std::endl;
         return ;
@@ -136,7 +137,7 @@ void MyRPCProvider::onMessage(const muduo::net::TcpConnectionPtr& conn,
     //给下面的method方法的调用，绑定一个Closure的回调函数
     google::protobuf::Closure* done = google::protobuf::NewCallback
     <MyRPCProvider,const muduo::net::TcpConnectionPtr&,google::protobuf::Message*>
-    (this,MyRPCProvider::SendRPCResponse,conn,response);
+    (this,&MyRPCProvider::SendRPCResponse,conn,response);
     //在框架上根据远端rpc请求，调用当前rpc节点上发布的方法
     //service->CallMethod() 相当于new UserService().Login(controller,request,response,done);
     //最后一个done参数是一个Closure类型的回调

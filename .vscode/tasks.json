@@ -15,7 +15,11 @@
                 "${workspaceFolder}/src/myrpcapplication.cpp",
                 "${workspaceFolder}/src/myrpcconfig.cpp",
                 "${workspaceFolder}/src/myrpcprovider.cpp",
-                "userservice.cpp",
+                "${workspaceFolder}/src/myrpcchannel.cpp",
+                "calleruserservice.cpp",
+                "-lmuduo_net",
+                "-lmuduo_base",
+                "-lpthread",
 				"-lprotobuf",
                 "-L/${workspaceFolder}/lib",
                 "-lmyrpc",
@@ -23,7 +27,7 @@
                 "${workspaceFolder}/middle_out/a.out"
             ],
             "options": {
-                "cwd": "${workspaceFolder}/example/callee"
+                "cwd": "${workspaceFolder}/example/caller"
             },
             "problemMatcher": [
                 "$gcc"
