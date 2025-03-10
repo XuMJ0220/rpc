@@ -46,7 +46,9 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     if(rpcHeader.SerializeToString(&rpc_header_str)){
         header_size = rpc_header_str.size();
     }else{
-        std::cerr<<"serialize rpc header error"<<std::endl;
+        //std::cerr<<"serialize rpc header error"<<std::endl;
+        controller->SetFailed("serialize rpc header error!");
+        return;
     }
 
     //组织代发送的rpc请求
@@ -68,7 +70,10 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     //使用tcp编成，完成rpc方法的远程调用
     int clientfd = socket(AF_INET,SOCK_STREAM,0);
     if(-1==clientfd){
-        std::cerr<<"create socket error! errno: "<<errno<<std::endl;
+        //std::cerr<<"create socket error! errno: "<<errno<<std::endl;
+        char errtxt[512] = {0};
+        sprintf(errtxt,"create socket error! errno: %d",errno);
+        controller->SetFailed(errtxt);
         exit(EXIT_FAILURE);
     }
 
@@ -83,14 +88,20 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
 
     //连接
     if(-1==connect(clientfd,(sockaddr*)&server_addr,sizeof(server_addr))){
-        std::cerr<<"connect error,errno: "<<errno<<std::endl;
+        char errtxt[512] = {0};
+        //std::cerr<<"connect error,errno: "<<errno<<std::endl;
+        sprintf(errtxt,"connect error,errno: %d",errno);
+        controller->SetFailed(errtxt);
         close(clientfd);
         exit(EXIT_FAILURE);
     }
 
     //发送rpc请求
     if(-1==send(clientfd,(void *)send_rpc_str.c_str(),(size_t)send_rpc_str.length(),0)){
-        std::cout<<"send error,errno: "<<errno<<std::endl;
+        char errtxt[512] = {0};
+        //std::cout<<"send error,errno: "<<errno<<std::endl;
+        sprintf(errtxt,"send error,errno: %d",errno);
+        controller->SetFailed(errtxt);
         close(clientfd);
         return;
     }
@@ -99,7 +110,10 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     char recv_buf[1024] = {0};
     int recv_size = 0;
     if(-1==(recv_size=recv(clientfd,recv_buf,1024,0))){
-        std::cerr<<"recv error,errno: "<<errno<<std::endl;
+        char errtxt[512] = {0};
+        //std::cerr<<"recv error,errno: "<<errno<<std::endl;
+        sprintf(errtxt,"recv error,errno: %d",errno);
+        controller->SetFailed(errtxt);
         close(clientfd);
         return;
     }
@@ -107,7 +121,10 @@ void MyRPCChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     //将得到的结果进行反序列化
     std::string response_str(recv_buf,recv_size);
     if(!response->ParseFromString(response_str)){
-        std::cout<<"parse error! response_str:"<<response_str<<std::endl;
+        char errtxt[512] = {0};
+        //std::cout<<"parse error! response_str:"<<response_str<<std::endl;
+        sprintf(errtxt,"parse error! response_str: %d",errno);
+        controller->SetFailed(errtxt);
         close(clientfd);
         return;
     }

@@ -4,6 +4,7 @@
 #include "user.pb.h"
 #include "myrpcchannel.hpp"
 #include <string>
+#include "myrpccontroller.hpp"
 void setLoginRequest(fixbug::LoginRequest* request,std::string name,std::string pwd);
 
 int main(int argc,char** argv){
@@ -21,15 +22,22 @@ int main(int argc,char** argv){
     request.set_pwd("123456");
     fixbug::LoginResponse response;
 
-    stub.Login(nullptr,&request,&response,nullptr);    
+    //加入PRCController
+    MyRPCController controller;
+    //stub.Login(nullptr,&request,&response,nullptr);    
+    stub.Login(&controller,&request,&response,nullptr);    
 
-    //来到了这里就是得到了response
-    if(0==response.mutable_result()->errcode()){
-        std::cout<<"rpc login response success: "<<response.success()<<std::endl;
-        std::cout<<"msg: "<<response.mutable_result()->errmsg()<<std::endl;
+    if(controller.Failed()){
+        std::cout<<controller.ErrorText()<<std::endl;
     }else{
-        std::cerr<<"rpc login response error: "<<response.result().errmsg()<<std::endl;
-    }
+         //来到了这里就是得到了response
+        if(0==response.mutable_result()->errcode()){
+            std::cout<<"rpc login response success: "<<response.success()<<std::endl;
+            std::cout<<"msg: "<<response.mutable_result()->errmsg()<<std::endl;
+        }else{
+            std::cerr<<"rpc login response error: "<<response.result().errmsg()<<std::endl;
+        }
+    }  
     return 0;
 }
 
