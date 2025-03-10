@@ -27,4 +27,24 @@ class Logger{
         void Log(std::string msg);
 };
 
+//定义宏
+#define LOG_INFO(logmsgarg,...)\
+    do\
+    {\
+        Logger& logger = Logger::GetInstance();  \
+        logger.SetLogLevel(LogLevel::INFO);    \
+        char c[1024] = {0}; \
+        snprintf(c,1024,logmsgarg,##__VA_ARGS__);\
+        logger.Log(std::string(c));\
+    } while(0);
+
+#define LOG_ERR(logmsgarg,...)\
+    do \
+    {\
+        Logger& logger = Logger::GetInstance();   \
+        logger.SetLogLevel(LogLevel::ERROR);\
+        char c[1024] = {0};\
+        snprintf(c,1024,logmsgarg,##__VA_ARGS__);\
+        logger.Log(std::string(c));\
+    }while(0);
 #endif

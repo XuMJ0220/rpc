@@ -67,6 +67,7 @@
         "ranges": "cpp",
         "stop_token": "cpp",
         "cinttypes": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "iomanip": "cpp"
     }
 }
