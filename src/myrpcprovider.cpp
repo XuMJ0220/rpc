@@ -4,12 +4,14 @@
 #include <myrpcapplication.hpp>
 #include <google/protobuf/descriptor.h>
 #include <rpcheader.pb.h>
+#include "logger.hpp"
 void MyRPCProvider::NotifyService(google::protobuf::Service* service){
     //获得传进来的服务的信息描述
     const google::protobuf::ServiceDescriptor* pserviceDesc = service->GetDescriptor();
     //获得服务的名字
     const std::string service_name= pserviceDesc->name();
-    std::cout<<"service_name: "<<service_name<<std::endl;
+    //std::cout<<"service_name: "<<service_name<<std::endl;
+    LOG_INFO("service_name: %s",service_name.c_str());
     //获得服务中方法的数量
     int methodCont = pserviceDesc->method_count();
 
@@ -22,7 +24,8 @@ void MyRPCProvider::NotifyService(google::protobuf::Service* service){
     for(int i = 0;i<methodCont;i++){//把服务中的方法都装进map中
         const google::protobuf::MethodDescriptor* pmethodDesc = pserviceDesc->method(i);//获得该服务下的每个方法的描述
         std::string method_name = pmethodDesc->name();//服务中方法的名字
-        std::cout<<"method_name: "<<method_name<<std::endl;
+        //std::cout<<"method_name: "<<method_name<<std::endl;
+        LOG_INFO("service_name: %s",service_name.c_str());
         serviceInfo.methodMap_.insert({method_name,pmethodDesc});
     }
     //往serviceMap_中装入这个服务
