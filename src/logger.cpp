@@ -21,8 +21,16 @@ Logger::Logger(){
             std::tm* local_tm = std::localtime(&now_time);
             //转为字符串
             std::stringstream ss;
-            ss<<std::put_time(local_tm,"%Y-%m-%d %H:%M:%S");
+            ss<<std::put_time(local_tm,"%Y-%m-%d");
             std::string file_name = ss.str();
+            //清除ss缓冲区
+            ss.str(std::string());
+            ss.clear();
+            ss<<std::put_time(local_tm,"%H:%M:%S");
+            std::string time_now = ss.str();
+            //清除ss缓冲区
+            ss.str(std::string());
+            ss.clear();
 
             FILE* pf = fopen(file_name.c_str(),"a+");//日志文件
             if(pf==nullptr){
@@ -30,7 +38,9 @@ Logger::Logger(){
                 exit(EXIT_FAILURE);
             }
 
-            std::string msg = lckQue_.Pop();
+            std::string msg = time_now+lckQue_.Pop();//格式是当前 时:分:秒 + 队列头部的东西
+            msg.append("\n");
+
             fputs(msg.c_str(),pf);//把msg的内容输出到pf文件中
             fclose(pf);
         }
@@ -46,4 +56,5 @@ void Logger::SetLogLevel(LogLevel level){
 
 //写日志
 void Logger::Log(std::string msg){
+    lckQue_.Push(msg);
 }
